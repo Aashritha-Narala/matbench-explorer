@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore the Matbench Materials-ML Tasks</title>
+    <style>
+        /* Base Variables and Reset */
+        :root {
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --border: #e2e8f0;
+            --focus-ring: #60a5fa;
+            --success: #166534;
+            --success-bg: #dcfce7;
+            --error: #991b1b;
+            --error-bg: #fee2e2;
+            --radius: 8px;
+            --note-bg: #fffbeb;
+            --note-text: #b45309;
+            --note-border: #fde68a;
+            --check-bg: #f0f9ff;
+            --check-border: #bae6fd;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #3b82f6;
+            --primary-hover: #60a5fa;
+            --border: #334155;
+            --focus-ring: #93c5fd;
+            --success: #4ade80;
+            --success-bg: #064e3b;
+            --error: #f87171;
+            --error-bg: #7f1d1d;
+            --note-bg: #422006;
+            --note-text: #fde68a;
+            --note-border: #78350f;
+            --check-bg: #082f49;
+            --check-border: #0369a1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 1.5rem;
+        }
+
+        /* Typography */
+        h1, h2, h3 { color: var(--text-main); margin-bottom: 0.5rem; }
+        p { margin-bottom: 1rem; color: var(--text-muted); }
+        
+        /* Accessibility Focus */
+        :focus-visible {
+            outline: 3px solid var(--focus-ring);
+            outline-offset: 2px;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        /* Summary Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .card {
+            background: var(--bg-color);
+            padding: 1rem;
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .card-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-end;
+            margin-bottom: 1.5rem;
+            background: var(--bg-color);
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        input, select, button {
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+            background-color: var(--surface-color);
+            color: var(--text-main);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-reset {
+            background-color: var(--text-muted);
+            color: #ffffff;
+        }
+        .btn-reset:hover {
+            background-color: var(--text-main);
+            color: var(--surface-color);
+        }
+
+        .theme-toggle {
+            background-color: var(--surface-color);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .theme-toggle:hover {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        /* Data Layout */
+        .data-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: var(--bg-color);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background-color: var(--bg-color);
+        }
+
+        /* Chart */
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .chart-note {
+            background-color: var(--note-bg);
+            color: var(--note-text);
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            border: 1px solid var(--note-border);
+            margin-bottom: 1rem;
+        }
+
+        .bar-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            gap: 0.5rem;
+        }
+
+        .bar-label {
+            width: 140px;
+            font-size: 0.75rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            text-align: right;
+        }
+
+        .bar-track {
+            flex: 1;
+            background: var(--bg-color);
+            height: 24px;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            padding-left: 0.5rem;
+        }
+
+        .bar-value {
+            font-size: 0.75rem;
+            color: var(--text-main);
+            margin-left: 4px;
+            font-weight: 600;
+        }
+
+        /* Self Check */
+        .self-check {
+            background-color: var(--check-bg);
+            border-color: var(--check-border);
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 4px;
+            display: none;
+            font-weight: 600;
+        }
+
+        .feedback.correct {
+            display: block;
+            background-color: var(--success-bg);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .feedback.incorrect {
+            display: block;
+            background-color: var(--error-bg);
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+            <h1 style="margin-bottom: 0;">Explore the Matbench Materials-ML Tasks</h1>
+            <button id="themeToggle" class="theme-toggle" aria-label="Enable Dark Mode">🌙 Dark Mode</button>
+        </div>
+        <section>
+            <h2>What is Matbench?</h2>
+            <p><strong>Matbench</strong> is a standardized benchmarking suite for machine learning (ML) models in materials science. It provides a carefully curated set of diverse tasks to evaluate algorithmic performance. </p>
+            <p><strong>Why do standardized benchmarks matter?</strong> In materials informatics, different researchers often use slightly different datasets or evaluation splits, making it nearly impossible to fairly compare models. Standardized benchmarks solve this by providing universal, fixed datasets and metrics. This allows the community to objectively identify the best-performing models, track historical progress, and ensure scientific reproducibility.</p>
+        </section>
+    </header>
+
+    <main>
+        <section aria-labelledby="summary-heading">
+            <h2 id="summary-heading" style="display:none;">Summary Statistics</h2>
+            <div class="cards-grid" id="summaryCards">
+                <!-- Cards injected by JS -->
+            </div>
+        </section>
+
+        <section aria-labelledby="controls-heading">
+            <h2 id="controls-heading" style="display:none;">Data Controls</h2>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="searchInput">Search Tasks</label>
+                    <input type="text" id="searchInput" placeholder="e.g. dielectric...">
+                </div>
+                <div class="control-group">
+                    <label for="inputFilter">Input Type</label>
+                    <select id="inputFilter">
+                        <option value="All">All</option>
+                        <option value="Structure">Structure</option>
+                        <option value="Composition">Composition</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="predictionFilter">Prediction Type</label>
+                    <select id="predictionFilter">
+                        <option value="All">All</option>
+                        <option value="Regression">Regression</option>
+                        <option value="Classification">Classification</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="sortControl">Sort By</label>
+                    <select id="sortControl">
+                        <option value="task_asc">Task Name (A-Z)</option>
+                        <option value="task_desc">Task Name (Z-A)</option>
+                        <option value="samples_desc">Samples (High to Low)</option>
+                        <option value="samples_asc">Samples (Low to High)</option>
+                    </select>
+                </div>
+                <button type="button" id="resetBtn" class="btn-reset">Reset Filters</button>
+            </div>
+
+            <div class="data-layout">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Dataset Sizes</h3>
+                        <div class="control-group" style="flex: 0 0 auto;">
+                            <label for="scaleToggle">Scale</label>
+                            <select id="scaleToggle">
+                                <option value="linear">Linear</option>
+                                <option value="log">Logarithmic</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-note" role="note">
+                        <strong>Note:</strong> Dataset sample counts vary substantially! They range from a few hundred (e.g., 312) to more than 100,000. Use the Logarithmic scale toggle above to better visualize smaller datasets alongside massive ones.
+                    </div>
+
+                    <div id="barChart" aria-label="Bar chart comparing dataset sizes">
+                        <!-- Bars injected by JS -->
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="dataTable" aria-label="Matbench datasets">
+                        <thead>
+                            <tr>
+                                <th>Task</th>
+                                <th>Input</th>
+                                <th>Prediction type</th>
+                                <th>Samples</th>
+                                <th>Target</th>
+                                <th>Unit</th>
+                                <th>Baseline statistic</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">
+                    Here, MAD means mean absolute deviation of the target values. For classification datasets, true fraction is the proportion of positive examples.
+                </p>
+            </div>
+        </section>
+
+        <section class="self-check" aria-labelledby="quiz-heading">
+            <h2 id="quiz-heading">Knowledge Check</h2>
+            <p>Based on the table above, which dataset has the absolute <strong>smallest</strong> number of samples?</p>
+            <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
+                <label for="quizSelect" class="sr-only" style="display:none;">Select dataset</label>
+                <select id="quizSelect">
+                    <option value="">-- Choose an option --</option>
+                    <option value="matbench_jdft2d">matbench_jdft2d</option>
+                    <option value="matbench_steels">matbench_steels</option>
+                    <option value="matbench_phonons">matbench_phonons</option>
+                    <option value="matbench_expt_gap">matbench_expt_gap</option>
+                </select>
+                <button type="button" id="checkBtn">Check Answer</button>
+            </div>
+            <div id="quizFeedback" class="feedback" role="alert"></div>
+        </section>
+    </main>
+</div>
+
+<script>
+    // Data Source provided in prompt
+    const rawData = [
+        { task: "matbench_dielectric", input: "Structure", prediction: "Regression", samples: 4764, target: "Refractive index", unit: "Unitless", baseline: "MAD = 0.809" },
+        { task: "matbench_expt_gap", input: "Composition", prediction: "Regression", samples: 4604, target: "Experimental band gap", unit: "eV", baseline: "MAD = 1.143" },
+        { task: "matbench_expt_is_metal", input: "Composition", prediction: "Classification", samples: 4921, target: "Metal or nonmetal", unit: "None", baseline: "True fraction = 0.498" },
+        { task: "matbench_glass", input: "Composition", prediction: "Classification", samples: 5680, target: "Glass-forming ability", unit: "None", baseline: "True fraction = 0.710" },
+        { task: "matbench_jdft2d", input: "Structure", prediction: "Regression", samples: 636, target: "Exfoliation energy", unit: "meV/atom", baseline: "MAD = 67.202" },
+        { task: "matbench_log_gvrh", input: "Structure", prediction: "Regression", samples: 10987, target: "Log shear modulus", unit: "log10(GPa)", baseline: "MAD = 0.293" },
+        { task: "matbench_log_kvrh", input: "Structure", prediction: "Regression", samples: 10987, target: "Log bulk modulus", unit: "log10(GPa)", baseline: "MAD = 0.290" },
+        { task: "matbench_mp_e_form", input: "Structure", prediction: "Regression", samples: 132752, target: "Formation energy", unit: "eV/atom", baseline: "MAD = 1.006" },
+        { task: "matbench_mp_gap", input: "Structure", prediction: "Regression", samples: 106113, target: "PBE band gap", unit: "eV", baseline: "MAD = 1.327" },
+        { task: "matbench_mp_is_metal", input: "Structure", prediction: "Classification", samples: 106113, target: "Metal or nonmetal", unit: "None", baseline: "True fraction = 0.435" },
+        { task: "matbench_perovskites", input: "Structure", prediction: "Regression", samples: 18928, target: "Formation energy", unit: "eV/unit cell", baseline: "MAD = 0.566" },
+        { task: "matbench_phonons", input: "Structure", prediction: "Regression", samples: 1265, target: "Final phonon DOS peak", unit: "cm⁻¹", baseline: "MAD = 323.787" },
+        { task: "matbench_steels", input: "Composition", prediction: "Regression", samples: 312, target: "Yield strength", unit: "MPa", baseline: "MAD = 229.374" }
+    ];
+
+    // State
+    let filteredData = [...rawData];
+
+    // DOM Elements
+    const searchInput = document.getElementById('searchInput');
+    const inputFilter = document.getElementById('inputFilter');
+    const predictionFilter = document.getElementById('predictionFilter');
+    const sortControl = document.getElementById('sortControl');
+    const resetBtn = document.getElementById('resetBtn');
+    const scaleToggle = document.getElementById('scaleToggle');
+    const tbody = document.querySelector('#dataTable tbody');
+    const barChart = document.getElementById('barChart');
+    const summaryCards = document.getElementById('summaryCards');
+    const themeToggle = document.getElementById('themeToggle');
+
+    // Initialization
+    function init() {
+        applyFilters(); // Renders table, chart, and cards
+        
+        // Event Listeners
+        searchInput.addEventListener('input', applyFilters);
+        inputFilter.addEventListener('change', applyFilters);
+        predictionFilter.addEventListener('change', applyFilters);
+        sortControl.addEventListener('change', applyFilters);
+        scaleToggle.addEventListener('change', renderChart);
+        resetBtn.addEventListener('click', resetFilters);
+        document.getElementById('checkBtn').addEventListener('click', handleQuiz);
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+    
+    function toggleTheme() {
+        const root = document.documentElement;
+        if (root.getAttribute('data-theme') === 'dark') {
+            root.removeAttribute('data-theme');
+            themeToggle.innerHTML = '🌙 Dark Mode';
+            themeToggle.setAttribute('aria-label', 'Enable Dark Mode');
+        } else {
+            root.setAttribute('data-theme', 'dark');
+            themeToggle.innerHTML = '☀️ Light Mode';
+            themeToggle.setAttribute('aria-label', 'Enable Light Mode');
+        }
+    }
+
+    // Render Summary Cards (dynamically updated)
+    function renderSummaryCards() {
+        const originalTotal = rawData.length;
+        const visibleTotal = filteredData.length;
+        const regression = filteredData.filter(d => d.prediction === 'Regression').length;
+        const classification = filteredData.filter(d => d.prediction === 'Classification').length;
+        const structure = filteredData.filter(d => d.input === 'Structure').length;
+        const composition = filteredData.filter(d => d.input === 'Composition').length;
+
+        summaryCards.innerHTML = `
+            <div class="card"><div class="card-value">${originalTotal}</div><div class="card-label">Original Total</div></div>
+            <div class="card"><div class="card-value">${visibleTotal}</div><div class="card-label">Visible Tasks</div></div>
+            <div class="card"><div class="card-value">${regression}</div><div class="card-label">Regression</div></div>
+            <div class="card"><div class="card-value">${classification}</div><div class="card-label">Classification</div></div>
+            <div class="card"><div class="card-value">${structure}</div><div class="card-label">Structure Input</div></div>
+            <div class="card"><div class="card-value">${composition}</div><div class="card-label">Composition Input</div></div>
+        `;
+    }
+
+    // Filter and Sort Logic
+    function applyFilters() {
+        const term = searchInput.value.toLowerCase();
+        const inp = inputFilter.value;
+        const pred = predictionFilter.value;
+        const sortVal = sortControl.value;
+
+        filteredData = rawData.filter(item => {
+            const matchSearch = item.task.toLowerCase().includes(term) || item.target.toLowerCase().includes(term);
+            const matchInp = inp === 'All' || item.input === inp;
+            const matchPred = pred === 'All' || item.prediction === pred;
+            return matchSearch && matchInp && matchPred;
+        });
+
+        filteredData.sort((a, b) => {
+            if (sortVal === 'task_asc') return a.task.localeCompare(b.task);
+            if (sortVal === 'task_desc') return b.task.localeCompare(a.task);
+            if (sortVal === 'samples_asc') return a.samples - b.samples;
+            if (sortVal === 'samples_desc') return b.samples - a.samples;
+            return 0;
+        });
+
+        renderTable();
+        renderChart();
+        renderSummaryCards();
+    }
+
+    function resetFilters() {
+        searchInput.value = '';
+        inputFilter.value = 'All';
+        predictionFilter.value = 'All';
+        sortControl.value = 'task_asc';
+        applyFilters();
+    }
+
+    // Render Table
+    function renderTable() {
+        if (filteredData.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 2rem;">No matching datasets found.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = filteredData.map(d => `
+            <tr>
+                <td><strong>${d.task}</strong></td>
+                <td>${d.input}</td>
+                <td>${d.prediction}</td>
+                <td>${d.samples.toLocaleString()}</td>
+                <td>${d.target}</td>
+                <td>${d.unit}</td>
+                <td>${d.baseline}</td>
+            </tr>
+        `).join('');
+    }
+
+    // Render Chart
+    function renderChart() {
+        if (filteredData.length === 0) {
+            barChart.innerHTML = '';
+            return;
+        }
+
+        const scale = scaleToggle.value; // 'linear' or 'log'
+        const maxSamples = Math.max(...filteredData.map(d => d.samples));
+        const maxLog = Math.log10(maxSamples);
+
+        barChart.innerHTML = filteredData.map(d => {
+            let widthPercent = 0;
+            if (scale === 'linear') {
+                widthPercent = (d.samples / maxSamples) * 100;
+            } else {
+                // To make small values visible on log scale, we base it on log10. 
+                // Using maxLog as the 100% mark.
+                const valLog = Math.log10(d.samples);
+                widthPercent = (valLog / maxLog) * 100;
+            }
+
+            // Ensure tiny bars have at least 1% width for visibility
+            widthPercent = Math.max(widthPercent, 1);
+
+            return `
+                <div class="bar-container">
+                    <div class="bar-label" title="${d.task}">${d.task}</div>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: ${widthPercent}%;"></div>
+                    </div>
+                    <div class="bar-value">${d.samples.toLocaleString()}</div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // Quiz Logic
+    function handleQuiz() {
+        const select = document.getElementById('quizSelect');
+        const feedback = document.getElementById('quizFeedback');
+        const ans = select.value;
+
+        feedback.className = 'feedback'; // reset
+        
+        if (!ans) {
+            feedback.textContent = 'Please select an answer from the dropdown.';
+            feedback.classList.add('incorrect');
+            return;
+        }
+
+        if (ans === 'matbench_steels') {
+            feedback.textContent = 'Correct! The "matbench_steels" dataset has the smallest number of samples with only 312.';
+            feedback.classList.add('correct');
+        } else {
+            let samples = 0;
+            const targetData = rawData.find(d => d.task === ans);
+            if (targetData) samples = targetData.samples;
+            feedback.innerHTML = `Incorrect. The '${ans}' dataset has ${samples.toLocaleString()} samples. Look closely at the table for a smaller number (hint: check the hundreds).`;
+            feedback.classList.add('incorrect');
+        }
+    }
+
+    // Run on load
+    window.onload = init;
+</script>
+</body>
+</html>
